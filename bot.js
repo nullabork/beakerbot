@@ -1,7 +1,11 @@
 /*jshint esversion: 9 */
 var Jimp = require('jimp'),
   Discord = require('discord.js'),
-  auth = require("./auth.json");
+  auth = require("./auth.json"),
+  textToImage = require('text-to-image'),
+  fs = require('fs');
+
+var char = auth.char || "!";
 
 var source_images = [{
   filename: 'beaker.jpg',
@@ -11,7 +15,8 @@ var source_images = [{
   max_height: 800,
   valign: 'middle',
   halign: 'middle',
-  outpath: 'image.jpg'
+  outpath: 'image.jpg',
+  keyword: 'beaker',
 },
 {
   filename: 'oscar.jpg',
@@ -21,7 +26,8 @@ var source_images = [{
   max_height: 800,
   valign: 'middle',
   halign: 'middle',
-  outpath: 'image.jpg'
+  outpath: 'image.jpg',
+  keyword: 'oscar',
 },
 {
   filename: 'cookie.jpg',
@@ -31,7 +37,8 @@ var source_images = [{
   max_height: 403,
   valign: 'bottom',
   halign: 'middle',
-  outpath: 'image.jpg'
+  outpath: 'image.jpg',
+  keyword: 'cookie',
 },
 {
   filename: 'cookie.png',
@@ -41,7 +48,8 @@ var source_images = [{
   max_height: 1114.286,
   valign: 'bottom',
   halign: 'middle',
-  outpath: 'image.png'
+  outpath: 'image.png',
+  keyword: 'cookie2',
 },
 {
   filename: 'vege.png',
@@ -51,7 +59,8 @@ var source_images = [{
   max_height: 210.156,
   valign: 'middle',
   halign: 'middle',
-  outpath: 'image.png'
+  outpath: 'image.png',
+  keyword: 'vege9000',
 },
 {
   filename: 'animal.jpg',
@@ -61,7 +70,19 @@ var source_images = [{
   max_height: 514.3,
   valign: 'middle',
   halign: 'right',
-  outpath: 'image.png'
+  outpath: 'image.png',
+  keyword: 'animal',
+},
+{
+  filename: 'swedish.jpg',
+  top: 135,
+  left: 15,
+  max_width: 293,
+  max_height: 306,
+  valign: 'middle',
+  halign: 'middle',
+  outpath: 'image.jpg',
+  keyword: 'swedish',
 }];
 
 // inset one image in another
@@ -108,12 +129,32 @@ function getLeft(img, image_spec) {
     return image_spec.left;
 }
 
-async function doFunny(spec, message) {
+async function doFunny(spec, message, text) {
 
   message.channel.startTyping(1);
-      
+
+  if(text) {
+
+    fs.unlinkSync("caption-" + spec.outpath);
+    var uri = await textToImage.generate(text, {
+      debug: true,
+      maxWidth: 400,
+      fontSize: 900,
+      fontFamily: 'Arial',
+      lineHeight: 45,
+      fontSize: 40,
+      margin: 5,
+      bgColor: "black",
+      textColor: "white",
+      debugFilename: "caption-" + spec.outpath
+    });
+
+    var p = await inset(spec, "caption-" + spec.outpath, spec.outpath);
+    message.channel.send("", {files: [spec.outpath]});
+  }
+  
   // did they drop an attachment?
-  if ( message.attachments.size > 0)
+  else if ( message.attachments.size > 0)
   {
     var p = await inset(spec, message.attachments.first().url, spec.outpath);
     message.channel.send("", {files: [spec.outpath]});
@@ -122,7 +163,7 @@ async function doFunny(spec, message) {
   // if they didnt, get the last 5 messages and see if there's any attachments we can inset in the beaker bg
   else {
     var done = false;
-    message.channel.fetchMessages({limit: 10})
+    message.channel.fetchMessages({limit: 30})
       .then(msgs => {
         msgs.forEach(async m => {
           if (m.author.bot) return;
@@ -137,7 +178,7 @@ async function doFunny(spec, message) {
       });
 
     if (!done) {
-      message.channel.fetchMessages({limit: 10})
+      message.channel.fetchMessages({limit: 30})
       .then(msgs => {
         msgs.forEach(async m => {
           if (m.author.bot) return;
@@ -165,28 +206,21 @@ async function doFunny(spec, message) {
 var client = new Discord.Client();
 client.login(auth.token);
 
+var images = [
+
+];
+
 // when messages come in
 client.on('message', async message => {
   try {
-    // is it a beaker command
-    if ( message.cleanContent == '!beaker') {
-      doFunny(source_images[0], message);
-    }
-    else if ( message.cleanContent == '!oscar') {
-      doFunny(source_images[1], message);
-    }
-    else if ( message.cleanContent == '!cookie') {
-      doFunny(source_images[2], message);
-    }
-    else if ( message.cleanContent == '!cookie2') {
-      doFunny(source_images[3], message);
-    }
-    else if ( message.cleanContent == '!vege9000') {
-      doFunny(source_images[4], message);
-    }
-    else if ( message.cleanContent == '!animal') {
-      doFunny(source_images[5], message);
-    }
+    source_images.forEach(function(source){
+      var isCommand = message.cleanContent.indexOf(char + source.keyword) == 0,
+        text = message.cleanContent.replace(char + source.keyword, '').trim();
+
+      if(isCommand) {
+        doFunny(source, message, text);
+      }
+    })
   }
   catch(ex) { Common.error(ex); }
 });

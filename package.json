@@ -1,0 +1,24 @@
+{
+  "name": "beakerbot",
+  "version": "1.0.0",
+  "description": "Adds beaker reactions to images",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nullabork/beakerbot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nullabork/beakerbot/issues"
+  },
+  "homepage": "https://github.com/nullabork/beakerbot#readme",
+  "dependencies": {
+    "discord.js": "^11.5.1",
+    "jimp": "^0.10.2",
+    "text-to-image": "^2.3.0"
+  }
+}
