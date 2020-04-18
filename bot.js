@@ -129,11 +129,20 @@ function getLeft(img, image_spec) {
     return image_spec.left;
 }
 
+function mapNumber(number, in_min, in_max, out_min, out_max) {
+  if(number > Math.max(in_max, in_min)) number = in_max;
+  if(number < Math.min(in_max, in_min)) number = in_min;
+  let n = (number - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  return n
+}
+
 async function doFunny(spec, message, text) {
 
   message.channel.startTyping(1);
 
   if(text) {
+    var fontSize = mapNumber(text.length, 1, 15, 150, 40);
+    var lineHeight = mapNumber(text.length, 1, 15, 200, 55);
 
     fs.unlinkSync("caption-" + spec.outpath);
     var uri = await textToImage.generate(text, {
@@ -141,9 +150,10 @@ async function doFunny(spec, message, text) {
       maxWidth: 400,
       fontSize: 900,
       fontFamily: 'Arial',
-      lineHeight: 45,
-      fontSize: 40,
-      margin: 5,
+      lineHeight: lineHeight,
+      fontSize: fontSize,
+      textAlign: "right",
+      margin: 15,
       bgColor: "black",
       textColor: "white",
       debugFilename: "caption-" + spec.outpath
@@ -151,6 +161,7 @@ async function doFunny(spec, message, text) {
 
     var p = await inset(spec, "caption-" + spec.outpath, spec.outpath);
     message.channel.send("", {files: [spec.outpath]});
+    done = true;
   }
   
   // did they drop an attachment?
