@@ -236,6 +236,10 @@ client.on('message', async message => {
   catch(ex) { Common.error(ex); }
 });
 
+client.on('ready', async => {
+  client.guilds.forEach(server => { console.log(server.name); });
+});
+
   // capture a whole pile of useful information
   client.on('error',            console.log);
   client.on('guildUnavailable', guild    => console.log('guild unavailable:', guild.id));
