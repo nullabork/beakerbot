@@ -9,12 +9,13 @@ var char = auth.char || '!';
 
 var textConfig = function(other){
   return {
-    maxWidth: 400,
-    fontFamily: 'Arial',
+    minWidth: 400,
+    maxWidth: 800,
+    fontFamily: 'Arial', 
     minFontSize: 40,
-    maxFontSize: 150,
+    maxFontSize: 190,
     minLineHeight: 55,
-    maxLineHeight: 200,
+    maxLineHeight: 250,
     charsCountFontStopScalingAt:15,
     textAlign: 'right',
     margin: 15,
@@ -228,7 +229,7 @@ async function doFunny(spec, message, text) {
       text.length, 
       1, 
       spec.text.charsCountFontStopScalingAt, 
-      spec.text.maxLineHeight, 
+      spec.text.maxFontSize,
       spec.text.minFontSize
     );
 
@@ -240,7 +241,17 @@ async function doFunny(spec, message, text) {
       spec.text.minLineHeight
     );
 
-    fs.unlinkSync('caption-' + spec.outpath);
+
+    spec.text.maxWidth = mapNumber(
+      text.length, 
+      1, 
+      spec.text.charsCountFontStopScalingAt, 
+      spec.text.maxWidth,
+      spec.text.minWidth
+    );
+
+
+    // fs.unlinkSync('caption-' + spec.outpath);
     var uri = await textToImage.generate(text, {
       ...spec.text,
       debug: true,
