@@ -1,11 +1,28 @@
 /*jshint esversion: 9 */
 var Jimp = require('jimp'),
   Discord = require('discord.js'),
-  auth = require("./auth.json"),
+  auth = require('./auth.json'),
   textToImage = require('text-to-image'),
   fs = require('fs');
 
-var char = auth.char || "!";
+var char = auth.char || '!';
+
+var textConfig = function(other){
+  return {
+    maxWidth: 400,
+    fontFamily: 'Arial',
+    minFontSize: 40,
+    maxFontSize: 150,
+    minLineHeight: 55,
+    maxLineHeight: 200,
+    charsCountFontStopScalingAt:15,
+    textAlign: 'right',
+    margin: 15,
+    bgColor: 'rgba(255,255,255,0)',
+    textColor: 'white',
+    ...(other||{})
+  };
+};
 
 var source_images = [{
   filename: 'beaker.jpg',
@@ -16,7 +33,8 @@ var source_images = [{
   valign: 'middle',
   halign: 'middle',
   outpath: 'image.jpg',
-  keyword: 'beaker',
+  keyword: new RegExp(`^${char}beaker\\b`, 'i'),
+  text: textConfig()
 },
 {
   filename: 'oscar.jpg',
@@ -27,7 +45,39 @@ var source_images = [{
   valign: 'middle',
   halign: 'middle',
   outpath: 'image.jpg',
-  keyword: 'oscar',
+  keyword: new RegExp(`^${char}oscar\\b`, 'i'),
+  text: textConfig({
+    textAlign: 'left'
+  })
+},
+{
+  filename: 'waldorf.jpg',
+  top: 477,
+  left: 124,
+  max_width: 637,
+  max_height: 419,
+  valign: 'middle',
+  halign: 'middle',
+  outpath: 'image.jpg',
+  keyword: new RegExp(`^${char}(statler|waldorf|old)\\b`, 'i'),
+  text: textConfig({
+    textAlign: 'left'
+  })
+},
+{
+  filename: 'grump.jpg',
+  top: 30,
+  left: 242,
+  max_width: 218,
+  max_height: 264,
+  valign: 'middle',
+  halign: 'middle',
+  outpath: 'image.jpg',
+  keyword: new RegExp(`^${char}grump\\b`, 'i'),
+  text: textConfig({
+    textAlign: 'right',
+    textColor: 'black'
+  })
 },
 {
   filename: 'cookie.jpg',
@@ -38,7 +88,15 @@ var source_images = [{
   valign: 'bottom',
   halign: 'middle',
   outpath: 'image.jpg',
-  keyword: 'cookie',
+  keyword: new RegExp(`^${char}cookie\\b`, 'i'),
+  text: textConfig({
+    bgColor: 'rgba(0,0,0,1)',
+    textColor: 'white',
+    textAlign: 'center',
+    charsCountFontStopScalingAt:5,
+    minFontSize: 50,
+    minLineHeight: 65,
+  })
 },
 {
   filename: 'cookie.png',
@@ -49,7 +107,11 @@ var source_images = [{
   valign: 'bottom',
   halign: 'middle',
   outpath: 'image.png',
-  keyword: 'cookie2',
+  keyword: new RegExp(`^${char}cookie2\\b`, 'i'),
+  text: textConfig({
+    bgColor: 'rgba(255,255,255,0)',
+    textAlign: 'center'
+  })
 },
 {
   filename: 'vege.png',
@@ -60,7 +122,15 @@ var source_images = [{
   valign: 'middle',
   halign: 'middle',
   outpath: 'image.png',
-  keyword: 'vege9000',
+  keyword: new RegExp(`^${char}(vegeta|vege9000)\\b`, 'i'),
+  text: textConfig({
+    maxWidth: 400,
+    margin: 10,
+    bgColor: 'rgba(244,93,73,0.8)',
+    charsCountFontStopScalingAt:20,
+    textColor: '#FED338',
+    textAlign: 'center'
+  })
 },
 {
   filename: 'animal.jpg',
@@ -71,7 +141,12 @@ var source_images = [{
   valign: 'middle',
   halign: 'right',
   outpath: 'image.png',
-  keyword: 'animal',
+  keyword: new RegExp(`^${char}animal\\b`, 'i'),
+  text: textConfig({
+    bgColor: 'rgba(255,255,255,0.7)',
+    textColor: 'rgba(0,0,0,1)',
+    textAlign: 'right'
+  })
 },
 {
   filename: 'swedish.jpg',
@@ -82,8 +157,17 @@ var source_images = [{
   valign: 'middle',
   halign: 'middle',
   outpath: 'image.jpg',
-  keyword: 'swedish',
+  keyword: new RegExp(`^${char}swedish\\b`, 'i'),
+  text: textConfig({
+    bgColor: 'white',
+    textColor: 'rgba(0,0,0,1)',
+    textAlign: 'left',
+    charsCountFontStopScalingAt:8,
+    minFontSize: 50,
+    minLineHeight: 65,
+  })
 }];
+
 
 // inset one image in another
 async function inset(image_spec, insetpath, outpath) {
@@ -137,30 +221,36 @@ function mapNumber(number, in_min, in_max, out_min, out_max) {
 }
 
 async function doFunny(spec, message, text) {
-
   message.channel.startTyping(1);
 
   if(text) {
-    var fontSize = mapNumber(text.length, 1, 15, 150, 40);
-    var lineHeight = mapNumber(text.length, 1, 15, 200, 55);
+    var fontSize = mapNumber(
+      text.length, 
+      1, 
+      spec.text.charsCountFontStopScalingAt, 
+      spec.text.maxLineHeight, 
+      spec.text.minFontSize
+    );
 
-    fs.unlinkSync("caption-" + spec.outpath);
+    var lineHeight = mapNumber(
+      text.length, 
+      1, 
+      spec.text.charsCountFontStopScalingAt, 
+      spec.text.maxLineHeight, 
+      spec.text.minLineHeight
+    );
+
+    fs.unlinkSync('caption-' + spec.outpath);
     var uri = await textToImage.generate(text, {
+      ...spec.text,
       debug: true,
-      maxWidth: 400,
-      fontSize: 900,
-      fontFamily: 'Arial',
       lineHeight: lineHeight,
       fontSize: fontSize,
-      textAlign: "right",
-      margin: 15,
-      bgColor: "black",
-      textColor: "white",
-      debugFilename: "caption-" + spec.outpath
+      debugFilename: 'caption-' + spec.outpath
     });
 
-    var p = await inset(spec, "caption-" + spec.outpath, spec.outpath);
-    message.channel.send("", {files: [spec.outpath]});
+    var p = await inset(spec, 'caption-' + spec.outpath, spec.outpath);
+    message.channel.send('', {files: [spec.outpath]});
     done = true;
   }
   
@@ -168,7 +258,7 @@ async function doFunny(spec, message, text) {
   else if ( message.attachments.size > 0)
   {
     var p = await inset(spec, message.attachments.first().url, spec.outpath);
-    message.channel.send("", {files: [spec.outpath]});
+    message.channel.send('', {files: [spec.outpath]});
   }
   
   // if they didnt, get the last 5 messages and see if there's any attachments we can inset in the beaker bg
@@ -183,7 +273,7 @@ async function doFunny(spec, message, text) {
           {
             done = true;
             var p = await inset(spec, m.attachments.first().url, spec.outpath);
-            message.channel.send("", {files: [spec.outpath]});
+            message.channel.send('', {files: [spec.outpath]});
           }
         });
       });
@@ -198,7 +288,7 @@ async function doFunny(spec, message, text) {
           {
             done = true;
             var p = await inset(spec, m.cleanContent, spec.outpath);
-            message.channel.send("", {files: [spec.outpath]});
+            message.channel.send('', {files: [spec.outpath]});
 
           }
         });
@@ -225,8 +315,8 @@ var images = [
 client.on('message', async message => {
   try {
     source_images.forEach(function(source){
-      var isCommand = message.cleanContent.indexOf(char + source.keyword) == 0,
-        text = message.cleanContent.replace(char + source.keyword, '').trim();
+      var isCommand = source.keyword.test(message.cleanContent),
+        text = message.cleanContent.replace(source.keyword, '').trim();
 
       if(isCommand) {
         doFunny(source, message, text);
