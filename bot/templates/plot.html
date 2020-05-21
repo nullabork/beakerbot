@@ -1,0 +1,65 @@
+{% extends "./base.html" %}
+
+{% block meme %}
+  <style>
+    body{
+      padding: 0;
+      margin: 0;
+    }
+
+    .default-meme {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      background-size: cover;
+      font-size: 4.2vw;
+      color: white;
+      -webkit-text-stroke: 0.02vw white;
+      background-position: {{meme.image.align}};
+      background-image: url({{ meme.image.url }});
+    }
+
+    {% for frame in frames %}
+      .default-meme__frame[data-frame='{{loop.index}}'] {
+        position: absolute;
+        top: {{100 / meme.h * frame.y}}%;
+        left: {{100 / meme.w * frame.x}}%;
+        height: {{100 / meme.h * frame.h}}%;
+        width: {{100 / meme.w * frame.w}}%;
+      }
+  
+      .default-meme__frame[data-frame='{{loop.index}}'] .default-meme__frame-inner {
+        display: flex;
+        position: relative;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        height: 100%;
+        width: 100%;
+        font-size: 4.2vw;
+        color: white;
+        background:red;
+        -webkit-text-stroke: 0.02vw white;
+        align-items: {{frame.text.valign}};
+        justify-content: {{frame.text.halign}};
+      }
+
+    {% endfor %}
+
+    .graph {
+      clip-path: polygon( {{ custom.plot }}, 100% 100%, 0 100% );
+    }
+
+  </style>
+
+  <div class="default-meme">
+    {% for frame in frames %}
+      <div class="default-meme__frame" data-frame="{{loop.index}}">
+        <div class="default-meme__frame-inner graph">
+
+        </div>
+        <div data-text>y - {{params.x}}</div>
+        <div data-text>x - {{params.y}}</span>
+      </div>
+    {% endfor %}
+  </div>
+
+{% endblock %}

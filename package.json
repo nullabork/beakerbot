@@ -17,8 +17,20 @@
   },
   "homepage": "https://github.com/nullabork/beakerbot#readme",
   "dependencies": {
-    "discord.js": "^11.5.1",
+    "ast-matcher": "^1.1.1",
+    "canvas": "^2.6.1",
+    "discord.js": "^12.2.0",
+    "esprima": "^4.0.1",
+    "image-size": "^0.8.3",
+    "image-to-base64": "^2.1.0",
     "jimp": "^0.10.2",
-    "text-to-image": "^2.3.0"
+    "node-webshot": "^1.0.3",
+    "nunjucks": "^3.2.1",
+    "pageres": "^5.2.0",
+    "postgres": "^1.0.2",
+    "probe-image-size": "^5.0.0",
+    "puppeteer": "^3.0.4",
+    "text-to-image": "^2.3.0",
+    "webshot-node": "^0.18.2"
   }
 }

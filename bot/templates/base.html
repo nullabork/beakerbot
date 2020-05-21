@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  </head>
+  <body>
+    {% block meme %}{% endblock %}
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.textfill.js"></script>
+      <script>
+        
+        window.textSize = !!!$('[data-text]').length;
+        $(window).ready(function(){
+          $('[data-text]').textfill({
+            maxFontPixels: 400,
+            changeLineHeight: true,
+            complete: function() {
+              window.textSize = true;
+            }
+          });
+        });
+
+      </script>
+  </body>
+</html>

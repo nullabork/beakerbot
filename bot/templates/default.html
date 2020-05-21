@@ -1,0 +1,72 @@
+{% extends "./base.html" %}
+
+{% block meme %}
+  <style>
+    body{
+      padding: 0;
+      margin: 0;
+    }
+
+    .default-meme {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      background-size: cover;
+      background-position: {{meme.image.align}};
+      background-image: url({{ meme.image.url }});
+    }
+
+    {% for frame in frames %}
+      .default-meme__frame[data-frame='{{loop.index}}'] {
+        position: absolute;
+        {# top: {{100 / meme.h * frame.y}}%;
+        left: {{100 / meme.w * frame.x}}%;
+        height: {{100 / meme.h * frame.h}}%;
+        width: {{100 / meme.w * frame.w}}%; #}
+        top: {{frame.y}}px;
+        left: {{frame.x}}px;
+        height: {{frame.h}}px;
+        width: {{frame.w}}px; 
+
+        {% if frame.background %}
+          background-color: {{ frame.background }};
+        {% endif %}
+      }
+  
+      .default-meme__frame[data-frame='{{loop.index}}'] .default-meme__frame-inner {
+        display: flex;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        height: {{frame.h}}px;
+        width: {{frame.w}}px; 
+        font-size: 4.2vw;
+        color: {{ frame.text.color | default('white') }};
+        -webkit-text-stroke: {{ frame.text.strokeSize | default('0.05vw') }} {{ frame.text.strokeColor | default('black') }};
+        text-shadow: 0px 0px 15px  {{ frame.text.shadow | default('black') }};
+        align-items: {{ frame.text.valign | default('flext-start') }};
+        justify-content: {{ frame.text.halign | default('flext-start') }};
+         
+        {% if frame.image %}
+          background-image: url({{ frame.image.url }});
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: {{frame.image.align}};
+        {% endif %}
+      }
+    {% endfor %}
+
+    {{ meme.css | default('') }}   
+  </style>
+
+  <div class="default-meme">
+    {% for frame in frames %}
+      <div class="default-meme__frame" data-frame="{{loop.index}}">
+        <div class="default-meme__frame-inner" {% if frame.text.value %}data-text{% endif %}>
+          {% if frame.text.value %}
+            <span style="line-height: 1em;">{{ frame.text.value }}</span>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+{% endblock %}

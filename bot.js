@@ -3,7 +3,8 @@ var Jimp = require('jimp'),
   Discord = require('discord.js'),
   auth = require('./auth.json'),
   textToImage = require('text-to-image'),
-  fs = require('fs');
+  fs = require('fs'),
+  makeMeme = require('./bot/layout');
 
 var char = auth.char || '!';
 
@@ -26,7 +27,7 @@ var textConfig = function(other){
 };
 
 var source_images = [{
-  filename: 'beaker.jpg',
+  filename: 'bot/images/beaker.jpg',
   top: 100,
   left: 100,
   max_width: 1000,
@@ -38,7 +39,7 @@ var source_images = [{
   text: textConfig()
 },
 {
-  filename: 'oscar.jpg',
+  filename: 'bot/images/oscar.jpg',
   top: 100,
   left: 100,
   max_width: 900,
@@ -52,7 +53,7 @@ var source_images = [{
   })
 },
 {
-  filename: 'waldorf.jpg',
+  filename: 'bot/images/waldorf.jpg',
   top: 477,
   left: 124,
   max_width: 637,
@@ -66,7 +67,7 @@ var source_images = [{
   })
 },
 {
-  filename: 'grump.jpg',
+  filename: 'bot/images/grump.jpg',
   top: 30,
   left: 242,
   max_width: 218,
@@ -81,7 +82,27 @@ var source_images = [{
   })
 },
 {
-  filename: 'cookie.jpg',
+  type: 'function',
+  keyword: new RegExp(`^${char}test`, 'i'),
+  do: makeMeme
+},
+{
+  filename: 'bot/images/blank.jpg',
+  top: 225,
+  left: 10,
+  max_width: 683,
+  max_height: 214,
+  valign: 'bottom',
+  halign: 'middle',
+  outpath: 'image.jpg',
+  keyword: new RegExp(`^${char}blank\\sbottom\\b`, 'i'),
+  text: textConfig({
+    textAlign: 'right',
+    textColor: 'black'
+  })
+},
+{
+  filename: 'bot/images/cookie.jpg',
   top: 80,
   left: 43,
   max_width: 288,
@@ -100,7 +121,7 @@ var source_images = [{
   })
 },
 {
-  filename: 'cookie.png',
+  filename: 'bot/images/cookie.png',
   top: 0,
   left: 0,
   max_width: 925.714,
@@ -115,7 +136,7 @@ var source_images = [{
   })
 },
 {
-  filename: 'vege.png',
+  filename: 'bot/images/vege.png',
   top: 341.027,
   left: 471.727,
   max_width: 371.814,
@@ -134,7 +155,7 @@ var source_images = [{
   })
 },
 {
-  filename: 'animal.jpg',
+  filename: 'bot/images/animal.jpg',
   top: 482.9,
   left: 30.2,
   max_width: 697.1,
@@ -150,7 +171,7 @@ var source_images = [{
   })
 },
 {
-  filename: 'swedish.jpg',
+  filename: 'bot/images/swedish.jpg',
   top: 135,
   left: 15,
   max_width: 293,
@@ -326,15 +347,18 @@ var images = [
 client.on('message', async message => {
   try {
     source_images.forEach(function(source){
+      
       var isCommand = source.keyword.test(message.cleanContent),
         text = message.cleanContent.replace(source.keyword, '').trim();
 
-      if(isCommand) {
+      if( isCommand && source.type == 'function' ) {
+        makeMeme(text, {});
+      } else if( isCommand ) {
         doFunny(source, message, text);
       }
     })
   }
-  catch(ex) { Common.error(ex); }
+  catch(ex) { console.log(ex) }
 });
 
 client.on('ready', async => {
