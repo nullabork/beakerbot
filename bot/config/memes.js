@@ -240,6 +240,39 @@ const memes = [
         value: ''
       }
     }]
+  },
+  {
+    keyword: 'snoop',
+    template: 'default.html',
+    
+    meme: {
+      w: 1384 ,
+      h: 821 ,
+      image: {
+        url: 'images/snoop.jpg',
+        align: 'center center'
+      }
+    },
+    defaultFrameIndex: 0,
+    frames: [{
+      type: types.IMAGE_OR_TEXT,
+      x: 29,
+      y: 29,
+      w: 821,
+      h: 763,
+      a: 0,
+
+      text: {
+        valign: 'center',
+        halign: 'center',
+        color: 'black',
+        shadow: 'white',
+        strokeSize: '0px',
+        strokeColor: 'rgba(255,255,255,0.01)',
+        value: ''
+      }
+      
+    }]
   }
 ];
 
