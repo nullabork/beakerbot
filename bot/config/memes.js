@@ -21,6 +21,7 @@ const memes = [
       }
     },
     defaultFrameIndex: 0,
+    
     frames: [{
       type: types.IMAGE_OR_TEXT,
       x: 100,
@@ -30,7 +31,7 @@ const memes = [
       a: 0,
 
       text: {
-        valign: 'flex-start',
+        valign: 'center',
         halign: 'flex-start',
         value: ''
       }
@@ -58,7 +59,7 @@ const memes = [
       a: 0,
 
       text: {
-        valign: 'flex-start',
+        valign: 'center',
         halign: 'flex-start',
         value: ''
       }
@@ -86,7 +87,7 @@ const memes = [
       a: 0,
 
       text: {
-        valign: 'flex-start',
+        valign: 'center',
         halign: 'flex-start',
         value: ''
       }
@@ -114,7 +115,7 @@ const memes = [
       a: 0,
 
       text: {
-        valign: 'flex-start',
+        valign: 'center',
         halign: 'flex-end',
         color: 'black',
         value: ''
@@ -143,7 +144,7 @@ const memes = [
       a: 0,
 
       text: {
-        valign: 'flex-start',
+        valign: 'center',
         halign: 'center',
         value: ''
       }
@@ -171,7 +172,7 @@ const memes = [
       a: 0,
 
       text: {
-        valign: 'flex-start',
+        valign: 'center',
         halign: 'center',
         color: 'black',
         shadow: 'white',
@@ -234,7 +235,7 @@ const memes = [
       a: 0,
 
       text: {
-        valign: 'flex-start',
+        valign: 'center',
         halign: 'flex-start',
         value: ''
       }

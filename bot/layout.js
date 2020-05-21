@@ -8,7 +8,7 @@ const { createCanvas, loadImage } = require('canvas'),
 
 nunjucks.configure('bot/templates');
 
-async function main (config) {
+async function main (config, output) {
 
   //convert image into base64 if it can be
   let memeImagePath = path.resolve(__dirname, config.meme.image.url);
@@ -32,7 +32,9 @@ async function main (config) {
   let template = nunjucks.render(config.template, config);
   //test by writing html out
 
-  fs.writeFileSync('index.html', template);
+  if(output) {
+    fs.writeFileSync('index.html', template);
+  }
 
   let options = {
     siteType: 'html',

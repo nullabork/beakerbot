@@ -14,6 +14,7 @@ var client = new Client();
 // when messages come in
 client.on('message', async message => {
   try {
+    
     let memes = memeConfig();
     memes.forEach(async function(config){
       
@@ -25,6 +26,8 @@ client.on('message', async message => {
       if (!isCommand) {
         return;
       }
+
+      message.channel.startTyping(1);
 
       //param parsing regex
       let paramRegex = /\b[a-z_]+=[^\n=]+(\n|$)/ig;
@@ -86,7 +89,7 @@ client.on('message', async message => {
       }
 
       //load puppeteer chrome headless, load and hydrate template and return as image buffer
-      let buffer = await layoutBuffer(config);
+      let buffer = await layoutBuffer(config, auth.output);
       
       //djs stuff
       const attachment = new MessageAttachment(buffer, 'image.png');
@@ -95,6 +98,9 @@ client.on('message', async message => {
     }); 
 
   } catch(ex) { console.log(ex) }
+
+  message.channel.stopTyping(true);
+
 });
 
 
