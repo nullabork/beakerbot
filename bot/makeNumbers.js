@@ -27,7 +27,7 @@ const parse = (str, normaliseX, normaliseY) => {
       modifier -= 1;
       continue;
     }
-    
+
     currentX += 1;
 
     if(currentX > maxX) {
@@ -87,7 +87,7 @@ const parse = (str, normaliseX, normaliseY) => {
         py: Math.round(Math.abs(y) / (Math.abs(minY) + maxY) * 100),
 
         //normalised
-        nx: normaliseX - Math.round(Math.abs(x) / maxX * normaliseX) ,
+        nx: Math.round(Math.abs(x) / maxX * normaliseX) ,
         ny: normaliseY - Math.round(Math.abs(y) / (Math.abs(minY) + maxY) * normaliseY)
       };
 
