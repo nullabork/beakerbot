@@ -2,9 +2,11 @@
 let { Client, MessageAttachment } = require('discord.js');
   auth = require('./config/auth.json'),
   { memeConfig, type } = require('./config/memes.js'),
+  
   textToImage = require('text-to-image'),
   fs = require('fs'),
-  layoutBuffer = require('./layout');
+  layoutBuffer = require('./layout'),
+  {  parse, isGraph, extract } = require('./makeNumbers');
 
 var char = auth.char || '!';
 
@@ -55,6 +57,17 @@ client.on('message', async message => {
           config.custom[key] = func(text, config);
         }
       }
+
+      if(isGraph(text)) {
+        let extracted = extract(text);
+
+        let frame = config.frames[config.defaultFrameIndex];
+        
+        frame.plot = {
+          extracted,
+          data: parse(extracted.chars, frame.w, frame.h)
+        };
+      } else
 
       //if extra text is used in the command set that text so it can be rendered
       if(text) {

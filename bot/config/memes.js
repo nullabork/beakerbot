@@ -24,11 +24,7 @@ const memes = [
     
     frames: [{
       type: types.IMAGE_OR_TEXT,
-      x: 100,
-      y: 100,
-      w: 1000,
-      h: 800,
-      a: 0,
+      x: 100, y: 100, w: 1000, h: 800, a: 0,
 
       text: {
         valign: 'center',
@@ -52,11 +48,7 @@ const memes = [
     defaultFrameIndex: 0,
     frames: [{
       type: types.IMAGE_OR_TEXT,
-      x: 100,
-      y: 100,
-      w: 900,
-      h: 800,
-      a: 0,
+      x: 100, y: 100, w: 900, h: 800, a: 0,
 
       text: {
         valign: 'center',
@@ -80,11 +72,7 @@ const memes = [
     defaultFrameIndex: 0,
     frames: [{
       type: types.IMAGE_OR_TEXT,
-      x: 124,
-      y: 477,
-      w: 637,
-      h: 419,
-      a: 0,
+      x: 124, y: 477, w: 637, h: 419, a: 0,
 
       text: {
         valign: 'center',
@@ -108,11 +96,7 @@ const memes = [
     defaultFrameIndex: 0,
     frames: [{
       type: types.IMAGE_OR_TEXT,
-      x: 242,
-      y: 30,
-      w: 218,
-      h: 264,
-      a: 0,
+      x: 242, y: 30, w: 218, h: 264, a: 0,
 
       text: {
         valign: 'center',
@@ -137,11 +121,7 @@ const memes = [
     defaultFrameIndex: 0,
     frames: [{
       type: types.IMAGE_OR_TEXT,
-      x: 43,
-      y: 80,
-      w: 288,
-      h: 403,
-      a: 0,
+      x: 43,  y: 80, w: 288, h: 403, a: 0,
 
       text: {
         valign: 'center',
@@ -165,11 +145,7 @@ const memes = [
     defaultFrameIndex: 0,
     frames: [{
       type: types.IMAGE_OR_TEXT,
-      x: 471.727,
-      y: 341.027,
-      w: 371.814,
-      h: 210.156,
-      a: 0,
+      x: 471.727,  y: 341.027, w: 371.814, h: 210.156, a: 0,
 
       text: {
         valign: 'center',
@@ -195,13 +171,7 @@ const memes = [
     defaultFrameIndex: 0,
     frames: [{
       type: types.IMAGE_OR_TEXT,
-      x: 30.2,
-      y: 482.9,
-      w: 697.1,
-      h: 514.3,
-      a: 0,
-
-      // background: 'rgba(255,255,255,0.5)',
+      x: 30.2, y: 482.9, w: 697.1, h: 514.3, a: 0,
 
       text: {
         valign: 'center',
@@ -228,11 +198,7 @@ const memes = [
     defaultFrameIndex: 0,
     frames: [{
       type: types.IMAGE_OR_TEXT,
-      x: 15,
-      y: 135,
-      w: 293,
-      h: 306,
-      a: 0,
+      x: 15, y: 135, w: 293,  h: 306,  a: 0,
 
       text: {
         valign: 'center',
@@ -256,12 +222,7 @@ const memes = [
     defaultFrameIndex: 0,
     frames: [{
       type: types.IMAGE_OR_TEXT,
-      x: 29,
-      y: 29,
-      w: 821,
-      h: 763,
-      a: 0,
-
+      x: 29, y: 29, w: 821, h: 763, a: 0,
       text: {
         valign: 'center',
         halign: 'center',
@@ -271,7 +232,6 @@ const memes = [
         strokeColor: 'rgba(255,255,255,0.01)',
         value: ''
       }
-      
     }]
   }
 ];

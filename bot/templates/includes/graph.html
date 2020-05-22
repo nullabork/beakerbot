@@ -1,0 +1,23 @@
+{% macro graph (config, plot) %}
+  <svg width="{{config.w}}px" height="{{config.h}}px" >
+
+  <g id="bird" style="transform-origin: center top; transform: scale(0.8) translateY(10%);">
+
+    {% for points in plot.data %}
+     <path 
+      d="M{{points[0].nx}},{{points[0].ny}} L {% for point in points %}{{point.nx}},{{point.ny}} {% endfor %}"
+      stroke="blue" 
+      stroke-width="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      fill="none"
+     />
+     
+     
+    {% endfor %}
+    <text x="0" y="0" fill="black">{{plot.extracted.text}}</text>
+    </g>
+    
+
+  </svg>
+{% endmacro %}

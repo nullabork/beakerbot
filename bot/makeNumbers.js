@@ -1,14 +1,23 @@
-const main = (str, normaliseX, normaliseY) => {
+const parse = (str, normaliseX, normaliseY) => {
   let maxY = 0,
-    maxX = 0,
+    minY = 0,
+    maxX = -1,
+    currentX = -1,
     modifier = 0,
     parts = str.split(''),
-    points = [];
+    series = [];
 
 
   for (let i = 0; i < parts.length; i++) {
     const part = parts[i];
-    
+
+    if(part == '[' || part == '(') {
+      series.push([]);
+      modifier = 0;
+      currentX = -1;
+      continue;
+    }
+
     if(part == '/') {
       modifier += 1;
       continue;
@@ -18,11 +27,22 @@ const main = (str, normaliseX, normaliseY) => {
       modifier -= 1;
       continue;
     }
+    
+    currentX += 1;
 
-    maxX += 1;
+    if(currentX > maxX) {
+      maxX = currentX;
+    }
 
     if(i != parts.length - 1 && part == parts[i + 1]) {
       continue;
+    }
+
+    if(parts.length - 1 > i + 2  && ( part == '^' || part == '_')) {
+      let pattern = part + parts[i + 1] + parts[i + 2];
+      if(pattern == '^/_' || pattern == '_|^') {
+        continue;
+      }
     }
 
     let y = 0;
@@ -37,27 +57,69 @@ const main = (str, normaliseX, normaliseY) => {
     if(part == '^') {
       y = 1;
     }
-
+    
     if(y + modifier > maxY) {
       maxY = y + modifier;
     }
 
-    points.push({
-      x: maxX,
+    if(y + modifier < minY) {
+      minY = y + modifier;
+    }
+
+    series[series.length - 1].push({
+      x: currentX,
       y: y + modifier
     });
   }
+  
+  for (let i = 0; i < series.length; i++) {
+    const points = series[i];
 
-  points = points.map(({x,y}) => {
-    return {
-      x: Math.round(x / maxX * normaliseX),
-      y: Math.round(y / maxY * normaliseY)
-    };
-  })
+    series[i] = points.map(({x,y}) => {
+      let point = {
 
-  return points;
+        //unadjusted values
+        x: x,
+        y: y,
+        
+        //percentage
+        px: Math.round(Math.abs(x) / maxX * 100),
+        py: Math.round(Math.abs(y) / (Math.abs(minY) + maxY) * 100),
+
+        //normalised
+        nx: normaliseX - Math.round(Math.abs(x) / maxX * normaliseX) ,
+        ny: normaliseY - Math.round(Math.abs(y) / (Math.abs(minY) + maxY) * normaliseY)
+      };
+
+      if(y < 0) point.py = -point.py;
+      if(y < 0) point.ny = -point.ny;
+
+      return point;
+    });
+  }
+
+  return series;
 }
 
-let numbers = main('_-^/_-^/_-^/_-^', 100,100);
+const isGraph = (input) => {
+  return /((\[|\()[_\-^\/\|]{3,999})+/.test(input);
+}
 
-console.log(numbers);
+const extract = (input) => {
+  if(!input) {
+    return {chars: null, text: input}
+  }
+
+  let r = /((\[|\()[_\-^\/\|]{3,99999})+/;
+  $chars = input.match(r);
+  return {
+    chars: $chars && $chars[0] || null,
+    text: input.replace(r, '').trim()
+  }
+}
+
+module.exports = {
+  parse: parse,
+  isGraph : isGraph,
+  extract: extract
+}
