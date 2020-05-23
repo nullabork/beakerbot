@@ -233,6 +233,52 @@ const memes = [
         value: ''
       }
     }]
+  },
+  {
+    keyword: 'trumpdesk',
+    template: 'default.html',
+    
+    meme: {
+      w: 853 ,
+      h: 844 ,
+      image: {
+        url: 'images/trump_background.png',
+        align: 'center center'
+      }
+    },
+    defaultFrameIndex: 0,
+    frames: [{
+      type: types.IMAGE_OR_TEXT,
+      x: 299, y: 95, w: 586, h: 515, a: 0,
+      background: "white",
+      text: {
+        valign: 'flex-start',
+        halign: 'center',
+        color: 'black',
+        shadow: 'white',
+        strokeSize: '0px',
+        strokeColor: 'rgba(255,255,255,0.01)',
+        value: ''
+      },
+      image : {
+        align: 'center center'
+      },
+      css : `
+transform: matrix3d(-0.224997, 0.180977, 0, -0.000562, 
+-0.683572, 0.025673, 0, 0.000058, 
+0, 0, 1, 0, 
+437.746929, 237.838708, 0, 1);
+transform-origin: 3px 75px 0px;
+`
+    },
+    {
+      type: types.IMAGE,
+      x: 0, y: 0, w: 853, h: 844, a: 0,
+      image: {
+        url: 'images/trump_foreground.png',
+        align: 'center center'
+      }
+    }]
   }
 ];
 

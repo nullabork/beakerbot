@@ -32,6 +32,8 @@
         {% if frame.background %}
           background-color: {{ frame.background }};
         {% endif %}
+
+        {{ frame.css | default('') }}
       }
   
       .default-meme__frame[data-frame='{{loop.index}}'] .default-meme__frame-inner {
@@ -47,6 +49,7 @@
         justify-content: {{ frame.text.halign | default('flext-start') }};
         
         {{ params.css | default('') }}
+        
 
         {% if frame.image %}
           background-image: url({{ frame.image.url }});
