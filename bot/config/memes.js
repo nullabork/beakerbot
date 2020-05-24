@@ -279,6 +279,46 @@ transform-origin: 3px 75px 0px;
         align: 'center center'
       }
     }]
+  },
+  {
+    keyword: 'musk',
+    template: 'default.html',
+    
+    meme: {
+      w: 1578 ,
+      h: 754 ,
+      image: {
+        url: 'images/musk_background.png',
+        align: 'center center'
+      }
+    },
+    defaultFrameIndex: 0,
+    frames: [{
+      type: types.IMAGE_OR_TEXT,
+      x: 20, y: 20, w: 1211, h: 714, a: 0,
+      text: {
+        valign: 'flex-start',
+        halign: 'flex-start',
+        color: 'white',
+        shadow: 'white',
+        css: `
+          position: relative;
+          width: 1011px;
+        `,
+        value: ''
+      },
+      image : {
+        align: 'left center'
+      },
+    },
+    {
+      type: types.IMAGE,
+      x: 0, y: 0, w: 1578, h: 754, a: 0,
+      image: {
+        url: 'images/musk_foreground.png',
+        align: 'center right'
+      }
+    }]
   }
 ];
 

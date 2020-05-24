@@ -9,8 +9,8 @@
     }
 
     .default-meme {
-      width: 100vw;
-      height: 100vh;
+      height: {{meme.h}}px;
+      width: {{meme.w}}px; 
       position: relative;
       background-size: cover;
       background-position: {{meme.image.align}};
@@ -58,6 +58,12 @@
           background-position: {{frame.image.align}};
         {% endif %}
       }
+
+      {% if frame.text.css %}
+        .default-meme__frame[data-frame='{{loop.index}}'] .default-meme__frame-inner[data-text] {
+          {{ frame.text.css }}
+        }
+      {% endif %}
     {% endfor %}
 
     svg {
