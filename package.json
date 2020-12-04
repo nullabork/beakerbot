@@ -32,5 +32,8 @@
     "puppeteer": "^3.3.0",
     "text-to-image": "^2.3.0",
     "webshot-node": "^0.18.2"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.2"
   }
 }

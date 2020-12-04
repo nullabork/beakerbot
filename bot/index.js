@@ -28,24 +28,18 @@ client.on("message", async (message) => {
     if (!isCommand) {
       return;
     }
-    console.log("it's a command");
 
     const keyword = message.cleanContent.replace(char, "").split(/\s+/)[0];
     const commandShouldBe = char + keyword;
 
     let config = memeMap[keyword];
 
-    console.log(keyword);
-
     //is it actually a config
     if (!config) {
       return;
     }
 
-    console.log("We gotta a config!");
-
     config = config();
-
     message.channel.startTyping(1);
 
     //param parsing regex
@@ -75,19 +69,19 @@ client.on("message", async (message) => {
       }
     }
 
-    if (isGraph(text)) {
-      let extracted = extract(text);
+    // if (isGraph(text)) {
+    //   let extracted = extract(text);
 
-      let frame = config.frames[config.defaultFrameIndex];
+    //   let frame = config.frames[config.defaultFrameIndex];
 
-      frame.plot = {
-        extracted,
-        data: parse(extracted.chars, frame.w, frame.h),
-      };
-    }
+    //   frame.plot = {
+    //     extracted,
+    //     data: parse(extracted.chars, frame.w, frame.h),
+    //   };
+    // }
 
     //if extra text is used in the command set that text so it can be rendered
-    else if (text) {
+    if (text) {
       //the config allows for multiple layers
       //config.defaultFrameIndex allows you to define which
       //layer is desired for discord to render text or images into
@@ -126,8 +120,6 @@ client.on("message", async (message) => {
     //djs stuff
     const attachment = new MessageAttachment(buffer, "image.png");
     message.channel.send(``, attachment);
-
-    // });
   } catch (ex) {
     console.log(ex);
   }
