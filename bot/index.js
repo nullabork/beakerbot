@@ -120,7 +120,6 @@ client.on("message", async (message) => {
           /(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/i
         );
 
-        console.log(match);
         return match && match.length;
       });
 
