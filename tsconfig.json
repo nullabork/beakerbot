@@ -1,17 +1,21 @@
 {
   "compilerOptions": {
-      "outDir": "./bot/memes",
-      "sourceMap": true,
+      "outDir": "./bot",
+      "sourceMap": false,
       "strict": true,
       "noImplicitReturns": true,
-      "noImplicitAny": true,
-      "module": "es6",
+      "noImplicitAny": false,
+      "target": "es6",
+      "module": "commonjs",
       "moduleResolution": "node",
-      "target": "es5",
       "allowJs": true,
       "allowSyntheticDefaultImports": true
   },
-  "include": [
-      "./src/**/*"
+  "files": [
+    "./src/memes.ts"
+  ],
+  "exclude": [
+      "node_modules"
   ]
+  
 }

@@ -1,22 +1,24 @@
 /*jshint esversion: 9 */
 const { Client, MessageAttachment } = require("discord.js");
 const auth = require("./config/auth.json");
-const { memes, type } = require("./config/memes.js");
+const { memes, type } = require("./memes.js");
 
 const textToImage = require("text-to-image");
 const fs = require("fs");
 const layoutBuffer = require("./layout");
-const { parse, isGraph, extract } = require("./makeNumbers");
 
-var char = auth.char || "!";
+let char = auth.char || "!";
+const botConfig = {
+  char,
+};
 
-var client = new Client();
+let client = new Client();
 
 const memeMap = {};
 
-for (const meme of memes) {
-  const config = JSON.stringify(meme);
-  memeMap[meme.keyword] = () => JSON.parse(config);
+for (const MemeConfig of memes) {
+  const mc = new MemeConfig();
+  memeMap[mc.keyword] = MemeConfig;
 }
 
 // when messages come in
@@ -32,14 +34,22 @@ client.on("message", async (message) => {
     const keyword = message.cleanContent.replace(char, "").split(/\s+/)[0];
     const commandShouldBe = char + keyword;
 
-    let config = memeMap[keyword];
+    let MemeConfig = memeMap[keyword];
 
     //is it actually a config
-    if (!config) {
+    if (!MemeConfig) {
       return;
     }
+    let config = new MemeConfig();
 
-    config = config();
+    if (config.execute) {
+      const ret = config.execute({ message, commands: memes, botConfig });
+
+      if (typeof ret !== true) {
+        return;
+      }
+    }
+
     message.channel.startTyping(1);
 
     //param parsing regex
@@ -69,48 +79,61 @@ client.on("message", async (message) => {
       }
     }
 
-    // if (isGraph(text)) {
-    //   let extracted = extract(text);
-
-    //   let frame = config.frames[config.defaultFrameIndex];
-
-    //   frame.plot = {
-    //     extracted,
-    //     data: parse(extracted.chars, frame.w, frame.h),
-    //   };
-    // }
+    if (config.frames.length) {
+      if (!config.frames[config.defaultFrameIndex].image) {
+        config.frames[config.defaultFrameIndex].image = {};
+      }
+    }
 
     //if extra text is used in the command set that text so it can be rendered
     if (text) {
+      if (/(http)?s?:?(\/\/[^"']*\.)/i.test(text.trim())) {
+        config.frames[config.defaultFrameIndex].image.url = text.trim();
+      }
+
       //the config allows for multiple layers
       //config.defaultFrameIndex allows you to define which
       //layer is desired for discord to render text or images into
-      if (config.frames.length) {
+      else if (config.frames.length) {
         config.frames[config.defaultFrameIndex].text.value = text;
       }
     }
 
     //if no extra text find an image in the last 60 messages and attatch that instead
-    else if (!text) {
+    if (!text) {
       let msgs = await message.channel.messages.fetch({ limit: 60 });
       let msg = msgs.find((m) => {
         return !m.author.bot && m.attachments.size;
       });
 
-      //no attachments found in the last 60
+      if (config.frames.length && msg) {
+        config.frames[
+          config.defaultFrameIndex
+        ].image.url = msg.attachments.first().url;
+      }
+    }
+
+    if (!config.frames[config.defaultFrameIndex].image.url && !text) {
+      let msgs = await message.channel.messages.fetch({ limit: 60 });
+      let msg = msgs.find((m) => {
+        const match = m.content.match(
+          /(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/i
+        );
+
+        console.log(match);
+        return match && match.length;
+      });
+
       if (!msg) {
         message.channel.send(`Opps, try pasting an image into discord.`);
         return;
       }
 
-      if (config.frames.length) {
-        if (!config.frames[config.defaultFrameIndex].image) {
-          config.frames[config.defaultFrameIndex].image = {};
-        }
-
-        config.frames[
-          config.defaultFrameIndex
-        ].image.url = msg.attachments.first().url;
+      const match = msg.content.match(
+        /(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/i
+      );
+      if (config.frames.length && match && match.length) {
+        config.frames[config.defaultFrameIndex].image.url = match[0];
       }
     }
 
