@@ -2,10 +2,14 @@
 const { Client, MessageAttachment } = require("discord.js");
 const auth = require("./config/auth.json");
 const { memes, type } = require("./memes.js");
-
-const textToImage = require("text-to-image");
 const fs = require("fs");
 const layoutBuffer = require("./layout");
+const figlet = require("figlet");
+const { LogError, LogWarning, LogSuccess } = require("ak19logger-npm");
+
+const logError = new LogError(); // ERROR Logger Object
+const logWarning = new LogWarning(); // WARNING Logger Object
+const logSuccess = new LogSuccess();
 
 let char = auth.char || "!";
 const botConfig = {
@@ -52,7 +56,6 @@ client.on("message", async (message) => {
 
     message.channel.startTyping(1);
 
-    //param parsing regex
     let paramRegex = /\b[a-z_]+=[^\n=]+(\n|$)/gi;
 
     let matches = message.cleanContent.match(paramRegex);
@@ -149,9 +152,23 @@ client.on("message", async (message) => {
   message.channel.stopTyping(true);
 });
 
-// client.on('ready', async => {
-//   client.guilds.forEach(server => { console.log(server.name); });
-// });
+client.on("ready", (async) => {
+  if (console && console.log) {
+    console.log(
+      figlet.textSync("Beaker Bot", {
+        horizontalLayout: "default",
+        verticalLayout: "default",
+        width: 80,
+        whitespaceBreak: true,
+      })
+    );
+    logSuccess.success("Beaker bot loaded");
+    console.log("_____________________________________");
+    logWarning.warning(
+      "If you make changes to the typescript commands you will need to run `npm run build`"
+    );
+  }
+});
 
 // capture a whole pile of useful information
 client.on("error", console.log);

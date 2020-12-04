@@ -4,6 +4,7 @@
   "description": "Adds beaker reactions to images",
   "main": "bot.js",
   "scripts": {
+    "start": "node bot.js",
     "build": "npx tsc && node bot.js"
   },
   "repository": {
@@ -17,17 +18,15 @@
   },
   "homepage": "https://github.com/nullabork/beakerbot#readme",
   "dependencies": {
+    "ak19logger-npm": "^1.3.4",
     "ast-matcher": "^1.1.1",
     "canvas": "^2.6.1",
     "discord.js": "^12.2.0",
-    "esprima": "^4.0.1",
+    "figlet": "^1.5.0",
     "image-size": "^0.8.3",
     "image-to-base64": "^2.1.1",
-    "jimp": "^0.10.3",
     "node-webshot": "^1.0.4",
     "nunjucks": "^3.2.2",
-    "pageres": "^5.2.0",
-    "postgres": "^1.0.2",
     "probe-image-size": "^5.0.0",
     "puppeteer": "^3.3.0",
     "text-to-image": "^2.3.0",
