@@ -90,7 +90,12 @@ client.on("message", async (message) => {
 
     //if extra text is used in the command set that text so it can be rendered
     if (text) {
-      if (/(http)?s?:?(\/\/[^"']*\.)/i.test(text.trim())) {
+      let ticker = text.trim().match(/^\$[a-z0-9]+/i);
+      if (ticker && ticker.length) {
+        ticker = ticker[0].replace("$", "");
+        const url = `https://charts2.finviz.com/chart.ashx?t=${ticker}&s=m`;
+        config.frames[config.defaultFrameIndex].image.url = url;
+      } else if (/(http)?s?:?(\/\/[^"']*\.)/i.test(text.trim())) {
         config.frames[config.defaultFrameIndex].image.url = text.trim();
       }
 
